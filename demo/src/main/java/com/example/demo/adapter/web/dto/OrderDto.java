@@ -12,18 +12,13 @@ public class OrderDto {
     @Data
     public static class CreateRequest {
         private Long customerId;
-
         private String customerName;
-
         private String customerEmail;
-
         private String tableNumber;
 
         @NotEmpty
         private List<OrderItemRequest> items;
-
         private BigDecimal discountAmount;
-
         private String notes;
     }
 
@@ -31,7 +26,6 @@ public class OrderDto {
     public static class OrderItemRequest {
         @NotNull
         private Long menuItemId;
-
         @NotNull
         @Min(1)
         private Integer quantity;
@@ -41,7 +35,6 @@ public class OrderDto {
     public static class UpdateStatusRequest {
         @NotNull
         private OrderStatus status;
-
         private String notes;
     }
 

@@ -25,7 +25,16 @@ public class OrderController {
 
     // ── All authenticated roles ───────────────────────────────────────────────
 
-    @PostMapping
+//    2026-09-16 12:44:25 [ac64f767] INFO  c.e.demo.filter.RequestLoggingFilter - [REQUEST] traceId=ac64f767 | POST /api/orders/create
+//2026-09-16 12:44:25 [ac64f767] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23505
+//2026-09-16 12:44:25 [ac64f767] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ERROR: duplicate key value violates unique constraint "orders_pkey"
+//  Detail: Key (id)=(1) already exists.
+//2026-09-16 12:44:25 [ac64f767] ERROR c.e.d.e.GlobalExceptionHandler - [EXCEPTION] RuntimeException | could not execute statement [ERROR: duplicate key value violates unique constraint "orders_pkey"
+//  Detail: Key (id)=(1) already exists.] [insert into orders (created_at,customer_email,customer_id,customer_name,discount_amount,handled_by,notes,status,subtotal,table_number,tax_amount,total_amount,updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into orders (created_at,customer_email,customer_id,customer_name,discount_amount,handled_by,notes,status,subtotal,table_number,tax_amount,total_amount,updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?)]; constraint [orders_pkey]
+//org.springframework.dao.DataIntegrityViolationException: could not execute statement [ERROR: duplicate key value violates unique constraint "orders_pkey"
+//  Detail: Key (id)=(1) already exists.] [insert into orders (created_at,customer_email,customer_id,customer_name,discount_amount,handled_by,notes,status,subtotal,table_number,tax_amount,total_amount,updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?)]; SQL [insert into orders (created_at,customer_email,customer_id,customer_name,discount_amount,handled_by,notes,status,subtotal,table_number,tax_amount,total_amount,updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?)]; constraint [orders_pkey]
+
+    @PostMapping("/create")
     public ResponseEntity<OrderDto.Response> create(
             @Valid @RequestBody OrderDto.CreateRequest request,
             @AuthenticationPrincipal RestaurantUserDetails principal,

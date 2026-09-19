@@ -1,10 +1,13 @@
 package com.example.demo.adapter.persistence;
 
+import com.example.demo.adapter.persistence.entity.OrderEntity;
+import com.example.demo.adapter.persistence.entity.OrderItemEntity;
 import com.example.demo.adapter.persistence.mapper.OrderMapper;
 import com.example.demo.adapter.persistence.repository.OrderRepository;
 import com.example.demo.domain.model.Order;
 import com.example.demo.domain.model.enums.OrderStatus;
 import com.example.demo.domain.port.OrderPort;
+import com.example.demo.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -70,5 +73,4 @@ public class OrderPortAdapter implements OrderPort {
         if (!repository.existsById(id)) throw new ResourceNotFoundException("Order", "id", id);
         repository.deleteById(id);
     }
-
 }

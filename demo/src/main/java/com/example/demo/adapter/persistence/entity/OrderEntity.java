@@ -72,4 +72,27 @@ public class OrderEntity {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    // Add an item while keeping BOTH sides of the bidirectional relationship synchronized
+    public void addItem(OrderItemEntity item){
+        if (item == null){return;}
+        items.add(item);
+        item.setOrder(this);
+    }
+
+    // Remove an item while keeping BOTH sides synchronized
+    public void removeItem(OrderItemEntity item){
+        if (item == null){return ;}
+        items.add(item);
+        item.setOrder(null);
+    }
+
+    // Replace the complete item collection safely.
+    public void replaceItems(List<OrderItemEntity> newItems){
+        items.clear();
+        if (newItems == null){return;}
+        for(OrderItemEntity item : newItems){
+            addItem(item);
+        }
+    }
 }

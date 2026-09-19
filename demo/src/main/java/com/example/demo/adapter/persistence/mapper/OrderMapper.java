@@ -65,9 +65,16 @@ public class OrderMapper {
         entity.setNotes(domain.getNotes());
         entity.setHandledBy(domain.getHandledBy());
         if (domain.getItems() != null) {
-            List<OrderItemEntity> items = domain.getItems().stream()
-                    .map(i -> itemToEntity(i, entity)).collect(Collectors.toList());
-            entity.setItems(items);
+            for (OrderItem item : domain.getItems()) {
+                OrderItemEntity itemEntity = itemToEntity(item, entity);
+                if (itemEntity != null) {
+                    // VERY IMPORTANT
+                    entity.addItem(itemEntity);
+                }
+            }
+//            List<OrderItemEntity> items = domain.getItems().stream()
+//                    .map(i -> itemToEntity(i, entity)).collect(Collectors.toList());
+//            entity.setItems(items);
         }
         return entity;
     }
@@ -76,7 +83,7 @@ public class OrderMapper {
         if (item == null) return null;
         OrderItemEntity entity = new OrderItemEntity();
         entity.setId(item.getId());
-        entity.setOrder(parent);
+//        entity.setOrder(parent);
         entity.setMenuItemId(item.getMenuItemId());
         entity.setMenuItemName(item.getMenuItemName());
         entity.setQuantity(item.getQuantity());

@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -37,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     private final EmailService emailService;
 
     @Override
+    @Transactional
     public OrderDto.Response create(OrderDto.CreateRequest request, String handledBy) {
         Order order = new Order();
         order.setHandledBy(handledBy);
@@ -81,6 +83,7 @@ public class OrderServiceImpl implements OrderService {
             item.setUnitPrice(unitPrice);
             item.setTaxRate(taxRate);
             item.setSubtotal(subtotal);
+
             return item;
         }).collect(Collectors.toList());
 
@@ -108,6 +111,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto.Response updateStatus(Long id, OrderDto.UpdateStatusRequest request, String updatedBy) {
         Order order = orderPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id));
@@ -125,32 +129,38 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OrderDto.Response getById(Long id) {
         return orderPort.findById(id).map(this::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderDto.Response> getAll() {
         return orderPort.findAll().stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderDto.Response> getByStatus(OrderStatus status) {
         return orderPort.findByStatus(status).stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderDto.Response> getMyOrders(String handledBy) {
         return orderPort.findByHandledBy(handledBy).stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderDto.Response> getByCustomer(Long customerId) {
         return orderPort.findByCustomerId(customerId).stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public OrderDto.BillResponse generateBill(Long id, String actorEmail) {
         Order order = orderPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id));
@@ -176,6 +186,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void cancel(Long id, String actorEmail) {
         Order order = orderPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id));
