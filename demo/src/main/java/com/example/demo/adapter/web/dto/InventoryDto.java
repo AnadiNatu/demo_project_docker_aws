@@ -10,11 +10,19 @@ public class InventoryDto {
 
     @Data
     public static class CreateRequest {
-        @NotBlank private String name;
-        @NotBlank private String unit;
-        @NotNull @DecimalMin("0.0") private BigDecimal quantity;
-        @NotNull @DecimalMin("0.0") private BigDecimal minThreshold;
-        @NotNull @DecimalMin("0.01") private BigDecimal costPerUnit;
+        @NotBlank
+        private String name;
+        @NotBlank
+        private String unit;
+        @NotNull
+        @DecimalMin("0.0")
+        private BigDecimal quantity;
+        @NotNull
+        @DecimalMin("0.0")
+        private BigDecimal minThreshold;
+        @NotNull
+        @DecimalMin("0.01")
+        private BigDecimal costPerUnit;
         private String category;
         private String supplier;
     }
@@ -23,16 +31,22 @@ public class InventoryDto {
     public static class UpdateRequest {
         private String name;
         private String unit;
-        @DecimalMin("0.0") private BigDecimal quantity;
-        @DecimalMin("0.0") private BigDecimal minThreshold;
-        @DecimalMin("0.01") private BigDecimal costPerUnit;
+        @DecimalMin("0.0")
+        private BigDecimal quantity;
+        @DecimalMin("0.0")
+        private BigDecimal minThreshold;
+        @DecimalMin("0.01")
+        private BigDecimal costPerUnit;
         private String category;
         private String supplier;
     }
 
     @Data
     public static class RestockRequest {
-        @NotNull @DecimalMin("0.01") private BigDecimal quantity;
+        @NotNull
+        @DecimalMin("0.01")
+        private BigDecimal quantity;
+
         private String supplier;
     }
 

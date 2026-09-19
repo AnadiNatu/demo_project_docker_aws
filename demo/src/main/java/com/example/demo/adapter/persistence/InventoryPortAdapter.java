@@ -4,6 +4,7 @@ import com.example.demo.adapter.persistence.mapper.InventoryMapper;
 import com.example.demo.adapter.persistence.repository.InventoryRepository;
 import com.example.demo.domain.model.InventoryItem;
 import com.example.demo.domain.port.InventoryPort;
+import com.example.demo.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

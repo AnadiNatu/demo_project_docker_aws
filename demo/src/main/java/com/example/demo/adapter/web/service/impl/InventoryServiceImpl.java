@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class InventoryServiceImpl implements InventoryService {
     private final InventoryPort inventoryPort;
 
     @Override
+    @Transactional
     public InventoryDto.Response create(InventoryDto.CreateRequest request, String createdBy) {
         InventoryItem item = new InventoryItem();
         item.setName(request.getName());
@@ -45,6 +47,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Transactional
     public InventoryDto.Response update(Long id, InventoryDto.UpdateRequest request, String updatedBy) {
         InventoryItem item = inventoryPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("InventoryItem", "id", id));
@@ -64,6 +67,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Transactional
     public InventoryDto.Response restock(Long id, InventoryDto.RestockRequest request, String updatedBy) {
         InventoryItem item = inventoryPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("InventoryItem", "id", id));
@@ -79,22 +83,26 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public InventoryDto.Response getById(Long id) {
         return inventoryPort.findById(id).map(this::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("InventoryItem", "id", id));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<InventoryDto.Response> getAll() {
         return inventoryPort.findAll().stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<InventoryDto.Response> getLowStock() {
         return inventoryPort.findLowStock().stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public InventoryDto.CostSummaryResponse getWeeklyCost() {
         LocalDateTime to = LocalDateTime.now();
         LocalDateTime from = to.minusDays(7);
@@ -103,6 +111,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public InventoryDto.CostSummaryResponse getMonthlyCost() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime from = now.with(TemporalAdjusters.firstDayOfMonth()).withHour(0).withMinute(0).withSecond(0);
@@ -112,12 +121,14 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public InventoryDto.CostSummaryResponse getCostBetween(LocalDateTime from, LocalDateTime to) {
         BigDecimal cost = inventoryPort.getTotalCostBetween(from, to);
         return buildCostSummary(cost, from, to, "CUSTOM");
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         inventoryPort.deleteById(id);
         log.info("[INVENTORY] Item deleted | id={}", id);

@@ -26,7 +26,7 @@ public class InventoryController {
 
     // ── Read (all roles) ─────────────────────────────────────────────────────
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<InventoryDto.Response>> getAll() {
         return ResponseEntity.ok(inventoryService.getAll());
     }
@@ -60,7 +60,7 @@ public class InventoryController {
 
     // ── Write (ADMIN + SUPER_ADMIN) ──────────────────────────────────────────
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<InventoryDto.Response> create(
             @Valid @RequestBody InventoryDto.CreateRequest request,
             @AuthenticationPrincipal RestaurantUserDetails principal,
