@@ -4,6 +4,7 @@ import com.example.demo.adapter.persistence.mapper.MenuItemMapper;
 import com.example.demo.adapter.persistence.repository.MenuItemRepository;
 import com.example.demo.domain.model.MenuItem;
 import com.example.demo.domain.port.MenuItemPort;
+import com.example.demo.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

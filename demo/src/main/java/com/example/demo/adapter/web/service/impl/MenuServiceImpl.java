@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,6 +27,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @CacheEvict(value = {"menuItems", "menuByCategory"}, allEntries = true)
+    @Transactional
     public MenuItemDto.Response create(MenuItemDto.CreateRequest request, String createdBy) {
         MenuItem item = new MenuItem();
         item.setName(request.getName());
@@ -46,6 +48,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @CacheEvict(value = {"menuItems", "menuByCategory"}, allEntries = true)
+    @Transactional
     public MenuItemDto.Response update(Long id, MenuItemDto.UpdateRequest request, String updatedBy) {
         MenuItem item = menuItemPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("MenuItem", "id", id));
@@ -66,6 +69,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MenuItemDto.Response getById(Long id) {
         return menuItemPort.findById(id)
                 .map(this::toResponse)
@@ -74,23 +78,27 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Cacheable("menuItems")
+    @Transactional(readOnly = true)
     public List<MenuItemDto.Response> getAll() {
         return menuItemPort.findAll().stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
     @Cacheable(value = "menuByCategory", key = "#category")
+    @Transactional(readOnly = true)
     public List<MenuItemDto.Response> getByCategory(String category) {
         return menuItemPort.findByCategory(category).stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemDto.Response> getAvailable() {
         return menuItemPort.findByIsAvailable(true).stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
     @CacheEvict(value = {"menuItems", "menuByCategory"}, allEntries = true)
+    @Transactional
     public MenuItemDto.Response toggleAvailability(Long id, String updatedBy) {
         MenuItem item = menuItemPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("MenuItem", "id", id));
@@ -103,6 +111,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @CacheEvict(value = {"menuItems", "menuByCategory"}, allEntries = true)
+    @Transactional
     public void delete(Long id) {
         menuItemPort.deleteById(id);
         log.info("[MENU] Item deleted | id={}", id);

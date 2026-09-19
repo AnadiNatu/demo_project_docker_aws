@@ -24,7 +24,7 @@ public class MenuController {
 
     // ── Read (all roles) ─────────────────────────────────────────────────────
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<MenuItemDto.Response>> getAll() {
         return ResponseEntity.ok(menuService.getAll());
     }
@@ -46,7 +46,17 @@ public class MenuController {
 
     // ── Write (ADMIN + SUPER_ADMIN) ──────────────────────────────────────────
 
-    @PostMapping
+//    Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [ERROR: duplicate key value violates unique constraint "menu_items_pkey"
+//  Detail: Key (id)=(1) already exists.] [insert into menu_items (category,created_at,created_by,description,image_url,is_available,name,price,tax_category,tax_rate,updated_at,updated_by) values (?,?,?,?,?,?,?,?,?,?,?,?)]
+//	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:97)
+//	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+//	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+//	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+//	at org.hibernate.id.insert.GetGeneratedKeysDelegate.performInsert(GetGeneratedKeysDelegate.java:107)
+//	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorPostInsertSingleTable.execute(MutationExecutorPostInsertSingleTable.java:100)
+//	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:175)
+//	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:113)
+    @PostMapping("/create")
     public ResponseEntity<MenuItemDto.Response> create(
             @Valid @RequestBody MenuItemDto.CreateRequest request,
             @AuthenticationPrincipal RestaurantUserDetails principal,
