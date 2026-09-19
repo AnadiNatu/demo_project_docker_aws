@@ -6,6 +6,7 @@ import com.example.demo.domain.model.enums.OrderStatus;
 import com.example.demo.domain.port.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class ReportServiceImpl implements ReportService {
     private final UserPort userPort;
 
     @Override
+    @Transactional(readOnly = true)
     public ReportDto.RevenueSummary getWeeklyRevenue() {
         LocalDateTime to = LocalDateTime.now();
         LocalDateTime from = to.minusDays(7);
@@ -30,6 +32,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ReportDto.RevenueSummary getMonthlyRevenue() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime from = now.with(TemporalAdjusters.firstDayOfMonth()).withHour(0).withMinute(0).withSecond(0);
@@ -37,11 +40,13 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ReportDto.RevenueSummary getRevenueBetween(LocalDateTime from, LocalDateTime to) {
         return buildRevenueSummary(from, to, "CUSTOM");
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ReportDto.InventoryCostSummary getWeeklyInventoryCost() {
         LocalDateTime to = LocalDateTime.now();
         LocalDateTime from = to.minusDays(7);
@@ -49,6 +54,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ReportDto.InventoryCostSummary getMonthlyInventoryCost() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime from = now.with(TemporalAdjusters.firstDayOfMonth()).withHour(0).withMinute(0).withSecond(0);
@@ -56,6 +62,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ReportDto.DashboardSummary getDashboard() {
         LocalDateTime startOfToday = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
         LocalDateTime now = LocalDateTime.now();
