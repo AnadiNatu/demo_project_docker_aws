@@ -25,7 +25,7 @@ public class SuperAdminController {
 
     // ── User CRUD ─────────────────────────────────────────────────────────────
 
-    @PostMapping("/users")
+    @PostMapping("/create/users")
     public ResponseEntity<UserManagementDto.Response> createUser(
             @Valid @RequestBody UserManagementDto.CreateUserRequest request,
             @AuthenticationPrincipal RestaurantUserDetails principal,

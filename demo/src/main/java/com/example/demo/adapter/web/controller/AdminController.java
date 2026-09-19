@@ -24,10 +24,7 @@ public class AdminController {
     private final ActivityLogService activityLogService;
 
     @PostMapping("/employees")
-    public ResponseEntity<UserManagementDto.Response> createEmployee(
-            @Valid @RequestBody UserManagementDto.CreateUserRequest request,
-            @AuthenticationPrincipal RestaurantUserDetails principal,
-            HttpServletRequest httpRequest) {
+    public ResponseEntity<UserManagementDto.Response> createEmployee(@Valid @RequestBody UserManagementDto.CreateUserRequest request, @AuthenticationPrincipal RestaurantUserDetails principal, HttpServletRequest httpRequest) {
 
         // Admins can only create EMPLOYEEs
         request.setRole(UserRole.EMPLOYEE);
@@ -45,22 +42,17 @@ public class AdminController {
     }
 
     @GetMapping("/employees/{id}")
-    public ResponseEntity<UserManagementDto.Response> getEmployee(@PathVariable Long id) {
+    public ResponseEntity<UserManagementDto.Response> getEmployeeById(@PathVariable Long id) {
         return ResponseEntity.ok(userManagementService.getById(id));
     }
 
     @PutMapping("/employees/{id}")
-    public ResponseEntity<UserManagementDto.Response> updateEmployee(
-            @PathVariable Long id,
-            @Valid @RequestBody UserManagementDto.UpdateUserRequest request) {
+    public ResponseEntity<UserManagementDto.Response> updateEmployee(@PathVariable Long id, @Valid @RequestBody UserManagementDto.UpdateUserRequest request) {
         return ResponseEntity.ok(userManagementService.updateUser(id, request));
     }
 
     @PatchMapping("/employees/{id}/activate")
-    public ResponseEntity<String> activate(
-            @PathVariable Long id,
-            @AuthenticationPrincipal RestaurantUserDetails principal,
-            HttpServletRequest httpRequest) {
+    public ResponseEntity<String> activate(@PathVariable Long id, @AuthenticationPrincipal RestaurantUserDetails principal, HttpServletRequest httpRequest) {
 
         String actor = principal.getUsername();
         userManagementService.activate(id, actor);
@@ -70,10 +62,7 @@ public class AdminController {
     }
 
     @PatchMapping("/employees/{id}/deactivate")
-    public ResponseEntity<String> deactivate(
-            @PathVariable Long id,
-            @AuthenticationPrincipal RestaurantUserDetails principal,
-            HttpServletRequest httpRequest) {
+    public ResponseEntity<String> deactivate(@PathVariable Long id, @AuthenticationPrincipal RestaurantUserDetails principal, HttpServletRequest httpRequest) {
 
         String actor = principal.getUsername();
         userManagementService.deactivate(id, actor);
@@ -83,8 +72,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/employees/{id}")
-    public ResponseEntity<Void> deleteEmployee(
-            @PathVariable Long id,
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id,
             @AuthenticationPrincipal RestaurantUserDetails principal,
             HttpServletRequest httpRequest) {
 

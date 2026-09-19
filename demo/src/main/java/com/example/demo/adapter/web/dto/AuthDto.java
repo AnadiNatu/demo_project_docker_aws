@@ -12,47 +12,62 @@ public class AuthDto {
     public static class RegisterRequest {
         @NotBlank
         private String fname;
-
         @NotBlank
         private String lname;
-
         @Email
         @NotBlank
         private String email;
-
         @NotBlank
-        @Size(min = 8) private String password;
-
+        @Size(min = 8)
+        private String password;
         private String phoneNumber;
     }
 
     @Data
     public static class LoginRequest {
-        @Email @NotBlank private String email;
-        @NotBlank private String password;
+        @Email
+        @NotBlank
+        private String email;
+
+        @NotBlank
+        private String password;
     }
 
     @Data
     public static class ForgotPasswordRequest {
-        @Email @NotBlank private String email;
+        @Email
+        @NotBlank
+        private String email;
     }
 
     @Data
     public static class ResetPasswordRequest {
-        @NotBlank private String token;
-        @NotBlank @Size(min = 8) private String newPassword;
+        @NotBlank
+        private String token;
+
+        @NotBlank
+        @Size(min = 8)
+        private String newPassword;
     }
 
     @Data
     public static class ChangePasswordRequest {
-        @NotBlank private String currentPassword;
-        @NotBlank @Size(min = 8) private String newPassword;
+        @NotBlank
+        private String currentPassword;
+
+        @NotBlank
+        @Size(min = 8)
+        private String newPassword;
     }
 
     @Data
     public static class OtpVerifyRequest {
-        @Email @NotBlank private String email;
-        @NotBlank private String otp;
+        @Email
+        @NotBlank
+        private String email;
+
+        @NotBlank
+        private String otp;
     }
 
     @Data

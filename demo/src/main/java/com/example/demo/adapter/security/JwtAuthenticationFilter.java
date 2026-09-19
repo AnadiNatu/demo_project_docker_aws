@@ -33,27 +33,81 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        /*
+         * No JWT:
+         * Let Spring Security continue. Public endpoints such as
+         * /api/auth/login are allowed by SecurityConfig.
+         */
+        if (authHeader == null || authHeader.isBlank()) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        /*
+         * A malformed Authorization header should not become an
+         * authenticated request.
+         */
+        if (!authHeader.startsWith("Bearer ")) {
+            log.debug("[JWT] Ignoring malformed Authorization header");
+            chain.doFilter(request, response);
+            return;
+        }
+
+        final String token = authHeader.substring(7).trim();
+
+        if (token.isBlank()) {
             chain.doFilter(request, response);
             return;
         }
 
         try {
-            String token = authHeader.substring(7);
+
             String username = jwtUtil.extractUsername(token);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            if (username != null &&
+                    SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                UserDetails userDetails =
+                        userDetailsService.loadUserByUsername(username);
+
                 if (jwtUtil.isTokenValid(token, userDetails)) {
-                    var authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                    log.debug("[JWT] Authenticated user={} | role={}", username, userDetails.getAuthorities());
+
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource()
+                                    .buildDetails(request)
+                    );
+
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(authToken);
+
+                    log.debug(
+                            "[JWT] Authenticated user={} | authorities={}",
+                            username,
+                            userDetails.getAuthorities()
+                    );
                 }
             }
+
         } catch (Exception ex) {
-            log.warn("[JWT] Token validation failed: {}", ex.getMessage());
+
+            /*
+             * Never place an invalid JWT into the SecurityContext.
+             * Continue the chain; Spring Security will return 401/403
+             * according to the protected endpoint.
+             */
+            SecurityContextHolder.clearContext();
+
+            log.warn(
+                    "[JWT] Token validation failed: {}",
+                    ex.getMessage()
+            );
         }
 
         chain.doFilter(request, response);

@@ -4,6 +4,7 @@ import com.example.demo.adapter.persistence.mapper.UserMapper;
 import com.example.demo.adapter.persistence.repository.UserRepository;
 import com.example.demo.domain.model.User;
 import com.example.demo.domain.port.UserPort;
+import com.example.demo.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

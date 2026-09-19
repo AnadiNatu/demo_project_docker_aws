@@ -32,7 +32,7 @@ public class SecurityConfig {
     private final RestaurantUserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Value("${app.frontend.url:http://localhost:5173}")
+    @Value("${app.frontend.url}")
     private String frontendUrl;
 
     @Bean
@@ -52,32 +52,32 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // ── Super Admin only ──────────────────────────────────
-                        .requestMatchers("/api/super-admin/**").hasAuthority("SUPER_ADMIN")
+                        .requestMatchers("/api/super-admin/**").hasRole("SUPER_ADMIN")
 
                         // ── Admin + Super Admin ───────────────────────────────
-                        .requestMatchers("/api/admin/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/api/admin/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
 
                         // ── Menu management (Admin & Super Admin write; Employee read) ──
-                        .requestMatchers("GET", "/api/menu/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN", "EMPLOYEE")
-                        .requestMatchers("/api/menu/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("GET", "/api/menu/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "EMPLOYEE")
+                        .requestMatchers("/api/menu/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
 
                         // ── Inventory (Admin & Super Admin write; Employee read) ──
-                        .requestMatchers("GET", "/api/inventory/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN", "EMPLOYEE")
-                        .requestMatchers("/api/inventory/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("GET", "/api/inventory/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "EMPLOYEE")
+                        .requestMatchers("/api/inventory/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
 
                         // ── Orders (all roles can create/view; admin can cancel/override) ──
-                        .requestMatchers("/api/orders/admin/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN")
-                        .requestMatchers("/api/orders/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN", "EMPLOYEE")
+                        .requestMatchers("/api/orders/admin/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/api/orders/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "EMPLOYEE")
 
                         // ── Customers (all roles can view/create) ─────────────
-                        .requestMatchers("/api/customers/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN", "EMPLOYEE")
+                        .requestMatchers("/api/customers/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "EMPLOYEE")
 
                         // ── Reports & CRM (Admin + Super Admin) ───────────────
-                        .requestMatchers("/api/reports/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN")
-                        .requestMatchers("/api/crm/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/api/reports/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/api/crm/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
 
                         // ── Activity Logs (Admin + Super Admin) ───────────────
-                        .requestMatchers("/api/logs/**").hasAnyAuthority("SUPER_ADMIN", "ADMIN")
+                        .requestMatchers("/api/logs/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
 
                         // ── Profile (authenticated) ───────────────────────────
                         .requestMatchers("/api/profile/**").authenticated()
@@ -99,6 +99,9 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+//        System.out.println(
+//                new BCryptPasswordEncoder().encode("password123")
+//        );
         return new BCryptPasswordEncoder();
     }
 
