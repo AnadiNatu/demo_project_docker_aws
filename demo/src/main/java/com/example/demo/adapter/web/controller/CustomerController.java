@@ -23,7 +23,7 @@ public class CustomerController {
     private final CustomerService customerService;
     private final ActivityLogService activityLogService;
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<CustomerDto.Response>> getAll() {
         return ResponseEntity.ok(customerService.getAll());
     }
@@ -37,12 +37,29 @@ public class CustomerController {
     public ResponseEntity<List<CustomerDto.Response>> getByType(@PathVariable CustomerType type) {
         return ResponseEntity.ok(customerService.getByType(type));
     }
-
-    @PostMapping
-    public ResponseEntity<CustomerDto.Response> create(
-            @Valid @RequestBody CustomerDto.CreateRequest request,
-            @AuthenticationPrincipal RestaurantUserDetails principal,
-            HttpServletRequest httpRequest) {
+//http://localhost:8080/api/customers/create
+//    timestamp: '2026-09-16T12:40:20.608563300', status: 500, error: 'Internal Server Error', message: 'could not execute statement [ERROR: duplicate key …(?,?,?,?,?,?,?,?,?)]; constraint [customers_pkey]', path: '/api/customers/create'}
+//error
+//:
+//"Internal Server Error"
+//message
+//:
+//"could not execute statement [ERROR: duplicate key value violates unique constraint \"customers_pkey\"\n  Detail: Key (id)=(3) already exists.] [insert into customers (address,created_at,customer_type,email,gst_number,name,phone,total_visits,updated_at) values (?,?,?,?,?,?,?,?,?)]; SQL [insert into customers (address,created_at,customer_type,email,gst_number,name,phone,total_visits,updated_at) values (?,?,?,?,?,?,?,?,?)]; constraint [customers_pkey]"
+//path
+//:
+//"/api/customers/create"
+//status
+//:
+//500
+//timestamp
+//:
+//"2026-09-16T12:40:20.608563300"
+//[[Prototype]]
+//:
+//Object
+    @PostMapping("/create")
+    public ResponseEntity<CustomerDto.Response> create(@Valid @RequestBody CustomerDto.CreateRequest request,
+            @AuthenticationPrincipal RestaurantUserDetails principal, HttpServletRequest httpRequest) {
 
         String actor = principal.getUsername();
         CustomerDto.Response response = customerService.create(request);

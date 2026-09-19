@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerPort customerPort;
 
     @Override
+    @Transactional
     public CustomerDto.Response create(CustomerDto.CreateRequest request) {
         if (request.getEmail() != null && !request.getEmail().isBlank()) {
             customerPort.findByEmail(request.getEmail()).ifPresent(c -> {
@@ -47,6 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public CustomerDto.Response update(Long id, CustomerDto.UpdateRequest request) {
         Customer customer = customerPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id));
@@ -64,22 +67,26 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CustomerDto.Response getById(Long id) {
         return customerPort.findById(id).map(this::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CustomerDto.Response> getAll() {
         return customerPort.findAll().stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CustomerDto.Response> getByType(CustomerType type) {
         return customerPort.findByType(type).stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         customerPort.deleteById(id);
         log.info("[CUSTOMER] Deleted | id={}", id);

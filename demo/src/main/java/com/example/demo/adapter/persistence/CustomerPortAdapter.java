@@ -5,6 +5,8 @@ import com.example.demo.adapter.persistence.repository.CustomerRepository;
 import com.example.demo.domain.model.Customer;
 import com.example.demo.domain.model.enums.CustomerType;
 import com.example.demo.domain.port.CustomerPort;
+import com.example.demo.exception.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class CustomerPortAdapter implements CustomerPort {
 
     private final CustomerRepository repository;

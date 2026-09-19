@@ -12,32 +12,22 @@ public class CustomerDto {
     public static class CreateRequest {
         @NotBlank
         private String name;
-
         @Email
         private String email;
-
         private String phone;
-
         private CustomerType customerType;
-
         private String address;
-
         private String gstNumber;
     }
 
     @Data
     public static class UpdateRequest {
         private String name;
-
         @Email
         private String email;
-
         private String phone;
-
         private CustomerType customerType;
-
         private String address;
-
         private String gstNumber;
     }
 
